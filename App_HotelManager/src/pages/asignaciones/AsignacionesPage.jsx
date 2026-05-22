@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
 import Swal from "sweetalert2";
-import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet, PDFDownloadLink, PDFViewer , Image} from '@react-pdf/renderer';
 
 // ============================================
 // ESTILOS DEL PDF
@@ -187,77 +187,110 @@ const pdfStyles = StyleSheet.create({
 const FacturaPDF = ({ data, hotelPerfil }) => {
   const {
     numeroFactura = `FAC-${Date.now()}`,
-    fecha = new Date().toLocaleDateString('es-ES'),
-    cliente = 'Cliente sin especificar',
-    habitacion = 'N/A',
-    piso = '1',
-    capacidad = '2',
+    fecha = new Date().toLocaleDateString("es-ES"),
+    cliente = "Cliente sin especificar",
+    habitacion = "N/A",
+    piso = "1",
+    capacidad = "1",
     fechaIngreso = new Date().toLocaleDateString(),
     fechaSalida = new Date().toLocaleDateString(),
-    servicios = [],
-    subtotal = 0,
-    impuesto = 0,
     total = 0,
-    metodoPago = 'Efectivo',
-    habitacionTipo = 'Estándar',
+    metodoPago = "Efectivo",
+    habitacionTipo = "Estándar",
     noches = 1,
-    monedaOriginal = 'NIO'
+    monedaOriginal = "NIO",
   } = data;
 
   const symbol = monedaOriginal === "USD" ? "$" : "C$";
-  const formatearPrecioPDF = (precio) => `${symbol} ${precio.toFixed(2)}`;
-
-  const precioPorNoche = subtotal / noches;
-  const precioMostrado = formatearPrecioPDF(precioPorNoche);
-  const subtotalMostrado = formatearPrecioPDF(subtotal);
-  const impuestoMostrado = formatearPrecioPDF(impuesto);
-  const totalMostrado = formatearPrecioPDF(total);
-
-  // Obtener datos del hotel
   const hotelNombre = hotelPerfil?.nombre || "HotelManager";
-  const hotelInfo = hotelPerfil ? {
-    direccion: hotelPerfil.direccion || "Av. Principal #123, Centro",
-    telefono: hotelPerfil.telefono || "(123) 456-7890",
-    email: hotelPerfil.email || "info@hotelmanager.com",
-    rfc: hotelPerfil.rfc || "HM-890123-ABC"
-  } : {
-    direccion: "Av. Principal #123, Centro",
-    telefono: "(123) 456-7890",
-    email: "info@hotelmanager.com",
-    rfc: "HM-890123-ABC"
-  };
+
+  const formatear = (valor) => `${symbol} ${Number(valor || 0).toFixed(2)}`;
 
   return (
     <Document>
       <Page size="A4" style={pdfStyles.page}>
         <View style={pdfStyles.header}>
-          <View style={pdfStyles.logoContainer}>
-            {/* Logo del hotel si existe */}
-            {hotelPerfil?.logo ? (
-              <Image src={hotelPerfil.logo} style={{ width: 60, height: 60, objectFit: 'contain' }} />
-            ) : (
-              <Text style={pdfStyles.logo}>🏨</Text>
-            )}
-            <View>
-              <Text style={pdfStyles.hotelName}>{hotelNombre}</Text>
-              <Text style={pdfStyles.hotelSubtitle}>Confort y Elegancia</Text>
-            </View>
+          <View>
+            <Text style={pdfStyles.hotelName}>{hotelNombre}</Text>
+            <Text style={pdfStyles.hotelSubtitle}>Factura de alojamiento</Text>
           </View>
+
           <View style={pdfStyles.facturaNumber}>
             <Text style={pdfStyles.facturaLabel}>FACTURA</Text>
             <Text style={pdfStyles.facturaId}>{numeroFactura}</Text>
-            <Text style={{ fontSize: 9, color: '#64748b', marginTop: 5 }}>Fecha: {fecha}</Text>
+            <Text style={{ fontSize: 9, color: "#64748b", marginTop: 5 }}>
+              Fecha: {fecha}
+            </Text>
           </View>
         </View>
 
         <View style={pdfStyles.hotelInfo}>
-          <Text>{hotelInfo.direccion}</Text>
-          <Text>Tel: {hotelInfo.telefono}</Text>
-          <Text>Email: {hotelInfo.email}</Text>
-          <Text>RFC: {hotelInfo.rfc}</Text>
+          <Text>Dirección: {hotelPerfil?.direccion || "No registrada"}</Text>
+          <Text>Teléfono: {hotelPerfil?.telefono || "No registrado"}</Text>
+          <Text>Email: {hotelPerfil?.email || "No registrado"}</Text>
+          <Text>RFC: {hotelPerfil?.rfc || "No registrado"}</Text>
         </View>
 
-        {/* Resto del contenido de la factura... */}
+        <View style={pdfStyles.clientSection}>
+          <Text style={pdfStyles.sectionTitle}>Datos del cliente</Text>
+
+          <View style={pdfStyles.clientRow}>
+            <Text style={pdfStyles.clientLabel}>Cliente:</Text>
+            <Text style={pdfStyles.clientValue}>{cliente}</Text>
+          </View>
+
+          <View style={pdfStyles.clientRow}>
+            <Text style={pdfStyles.clientLabel}>Habitación:</Text>
+            <Text style={pdfStyles.clientValue}>{habitacion}</Text>
+          </View>
+
+          <View style={pdfStyles.clientRow}>
+            <Text style={pdfStyles.clientLabel}>Tipo:</Text>
+            <Text style={pdfStyles.clientValue}>{habitacionTipo}</Text>
+          </View>
+
+          <View style={pdfStyles.clientRow}>
+            <Text style={pdfStyles.clientLabel}>Piso:</Text>
+            <Text style={pdfStyles.clientValue}>{piso}</Text>
+          </View>
+
+          <View style={pdfStyles.clientRow}>
+            <Text style={pdfStyles.clientLabel}>Capacidad:</Text>
+            <Text style={pdfStyles.clientValue}>{capacidad}</Text>
+          </View>
+        </View>
+
+        <View style={pdfStyles.table}>
+          <View style={pdfStyles.tableHeader}>
+            <Text style={pdfStyles.tableHeaderCell}>Check-in</Text>
+            <Text style={pdfStyles.tableHeaderCell}>Check-out</Text>
+            <Text style={pdfStyles.tableHeaderCell}>Noches</Text>
+            <Text style={pdfStyles.tableHeaderCell}>Método</Text>
+          </View>
+
+          <View style={pdfStyles.tableRow}>
+            <Text style={pdfStyles.tableCell}>{fechaIngreso}</Text>
+            <Text style={pdfStyles.tableCell}>{fechaSalida}</Text>
+            <Text style={pdfStyles.tableCell}>{noches}</Text>
+            <Text style={pdfStyles.tableCell}>{metodoPago}</Text>
+          </View>
+        </View>
+
+        <View style={pdfStyles.totalsSection}>
+          <View style={[pdfStyles.totalRow, pdfStyles.grandTotal]}>
+            <Text style={pdfStyles.grandTotalLabel}>TOTAL</Text>
+            <Text style={pdfStyles.grandTotalValue}>{formatear(total)}</Text>
+          </View>
+        </View>
+
+        <View style={pdfStyles.footer}>
+          <Text style={pdfStyles.footerText}>
+            Gracias por su preferencia.
+          </Text>
+          <Text style={pdfStyles.thankYou}>
+            {hotelNombre} - Su mejor elección
+          </Text>
+        </View>
       </Page>
     </Document>
   );
@@ -297,28 +330,26 @@ const FacturaModal = ({ facturaData, onClose }) => {
     
     const mensaje = `🏨 *${hotelNombre.toUpperCase()} - FACTURA* 🏨
 ━━━━━━━━━━━━━━━━━━━━━━
-📄 *Factura #:* ${facturaData.numeroFactura}
-📅 *Fecha:* ${facturaData.fecha}
+ *Factura #:* ${facturaData.numeroFactura}
+ *Fecha:* ${facturaData.fecha}
 ━━━━━━━━━━━━━━━━━━━━━━
 
-👤 *Cliente:* ${facturaData.cliente}
-🛏️ *Habitación:* ${facturaData.habitacion} (${facturaData.habitacionTipo})
-📅 *Check-in:* ${facturaData.fechaIngreso}
-📅 *Check-out:* ${facturaData.fechaSalida}
-🏠 *Noches:* ${facturaData.noches}
+  *Cliente:* ${facturaData.cliente}
+  *Habitación:* ${facturaData.habitacion} (${facturaData.habitacionTipo})
+  *Check-in:* ${facturaData.fechaIngreso}
+  *Check-out:* ${facturaData.fechaSalida}
+  *Noches:* ${facturaData.noches}
 
 ━━━━━━━━━━━━━━━━━━━━━━
 💰 *DETALLE DE PAGO*
 ━━━━━━━━━━━━━━━━━━━━━━
-💵 *Subtotal:* ${symbol}${facturaData.subtotal.toFixed(2)}
-📊 *IVA (16%):* ${symbol}${facturaData.impuesto.toFixed(2)}
-💎 *TOTAL:* ${symbol}${facturaData.total.toFixed(2)}
-💳 *Método de pago:* ${facturaData.metodoPago}
+ 
+ *TOTAL:* ${symbol}${facturaData.total.toFixed(2)}
+ *Método de pago:* ${facturaData.metodoPago}
 
 ━━━━━━━━━━━━━━━━━━━━━━
-✨ *¡Gracias por su preferencia!*
-📎 Se adjunta factura en PDF
-🏨 *${hotelNombre} - Su mejor elección*`;
+ *¡Gracias por su preferencia!*
+ *${hotelNombre} - Su mejor elección*`;
     
     const mensajeCodificado = encodeURIComponent(mensaje);
     window.open(`https://wa.me/?text=${mensajeCodificado}`, '_blank');
@@ -509,9 +540,9 @@ const AsignacionesPage = () => {
       const inicio = new Date(data.fecha_inicio), fin = new Date(data.fecha_fin);
       nochesCount = Math.ceil(Math.abs(fin - inicio) / (1000 * 60 * 60 * 24)) || 1;
     } else if (data.noches) nochesCount = data.noches;
-    const subtotal = parseFloat(data.total || habitacion?.precio || 0);
-    const impuesto = subtotal * 0.16;
-    const total = subtotal + impuesto;
+    const total = parseFloat(data.total || habitacion?.precio || 0);
+    const subtotal = total; // Ignorar subtotal original y recalcular
+    const impuesto =0;
     setFacturaDataActual({
       numeroFactura: `FAC-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       fecha: new Date().toLocaleDateString('es-ES'),
