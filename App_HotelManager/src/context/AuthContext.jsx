@@ -26,27 +26,34 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    const response = await api.post("login/", {
-      username,
-      password,
-    });
+  localStorage.removeItem("token");
+  localStorage.removeItem("usuario");
+  setUsuario(null);
 
-    const data = response.data;
-    console.log("LOGIN DATA:", data);
+  const response = await api.post("login/", {
+    username,
+    password,
+  });
 
-    // La estructura correcta: data.token y data.usuario
-    const usuarioData = data.usuario || data; // Por si el backend devuelve diferente
-    
-    console.log("Usuario a guardar:", usuarioData);
-    console.log("Rol del usuario:", usuarioData.rol);
+  const data = response.data;
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("usuario", JSON.stringify(usuarioData));
-
-    setUsuario(usuarioData);
-
-    return data;
+  const usuarioData = {
+    token: data.token,
+    user_id: data.user_id,
+    username: data.username,
+    first_name: data.first_name,
+    last_name: data.last_name,
+    email: data.email,
+    rol: data.rol,
   };
+
+  localStorage.setItem("token", data.token);
+  localStorage.setItem("usuario", JSON.stringify(usuarioData));
+
+  setUsuario(usuarioData);
+
+  return usuarioData;
+};
 
   const logout = () => {
     localStorage.removeItem("token");
