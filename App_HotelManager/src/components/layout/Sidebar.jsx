@@ -1,6 +1,12 @@
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useState, useEffect } from "react";
+import { BsCalendarCheck } from "react-icons/bs";
+import { HiOutlineUserGroup } from "react-icons/hi2";
+import { MdBedroomParent } from "react-icons/md";
+import { FaUserCheck } from "react-icons/fa6";
+import { FaHotel } from "react-icons/fa6";
+import { CiLogout } from "react-icons/ci";
 
 const Sidebar = () => {
   const { logout, usuario } = useAuth();
@@ -34,7 +40,9 @@ const Sidebar = () => {
     <>
       <div className="h-16 flex items-center px-4 sm:px-6 border-b border-slate-200 bg-white">
         <h1 className="text-lg sm:text-xl font-bold flex items-center gap-2 text-slate-900">
-          <span>🏨</span>
+          <span>
+            <FaHotel />
+          </span>
           <span className="hidden sm:inline">HotelManager</span>
           <span className="sm:hidden">HM</span>
         </h1>
@@ -49,28 +57,38 @@ const Sidebar = () => {
       <nav className="px-3 sm:px-4 space-y-2 flex-1">
         {esAdmin ? (
           <NavLink to="/usuarios" className={linkClass} onClick={() => setIsMobileOpen(false)}>
-            <span className="text-lg sm:text-base">👥</span>
+            <span className="text-lg sm:text-base">
+              <HiOutlineUserGroup />
+            </span>
             <span className="text-sm sm:text-base">Usuarios</span>
           </NavLink>
         ) : (
           <>
             <NavLink to="/asignaciones" className={linkClass} onClick={() => setIsMobileOpen(false)}>
-              <span className="text-lg sm:text-base">📅</span>
+              <span className="text-lg sm:text-base">
+                <BsCalendarCheck />
+              </span>
               <span className="text-sm sm:text-base">Asignaciones</span>
             </NavLink>
 
             <NavLink to="/habitaciones" className={linkClass} onClick={() => setIsMobileOpen(false)}>
-              <span className="text-lg sm:text-base">🛏️</span>
+              <span className="text-lg sm:text-base">
+                <MdBedroomParent />
+              </span>
               <span className="text-sm sm:text-base">Habitaciones</span>
             </NavLink>
 
             <NavLink to="/clientes" className={linkClass} onClick={() => setIsMobileOpen(false)}>
-              <span className="text-lg sm:text-base">👤</span>
+              <span className="text-lg sm:text-base">
+                <FaUserCheck />
+              </span>
               <span className="text-sm sm:text-base">Clientes</span>
             </NavLink>
 
             <NavLink to="/perfil-hotel" className={linkClass} onClick={() => setIsMobileOpen(false)}>
-              <span className="text-lg sm:text-base">⚙️</span>
+              <span className="text-lg sm:text-base">
+                <FaUserCheck />
+              </span>
               <span className="text-sm sm:text-base">Perfil del Hotel</span>
             </NavLink>
           </>
@@ -97,7 +115,9 @@ const Sidebar = () => {
           onClick={logout}
           className="w-full text-left text-slate-600 hover:text-red-600 hover:bg-red-50 px-3 py-2.5 rounded-xl transition-all duration-200 text-sm sm:text-base flex items-center gap-2 font-semibold"
         >
-          <span>🚪</span>
+          <span>
+            <CiLogout />
+          </span>
           <span>Cerrar sesión</span>
         </button>
       </div>
