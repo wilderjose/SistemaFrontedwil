@@ -7,6 +7,7 @@ import { MdBedroomParent } from "react-icons/md";
 import { FaUserCheck } from "react-icons/fa6";
 import { FaHotel } from "react-icons/fa6";
 import { CiLogout } from "react-icons/ci";
+import { FaChartBar } from "react-icons/fa";
 
 const Sidebar = () => {
   const { logout, usuario } = useAuth();
@@ -64,6 +65,22 @@ const Sidebar = () => {
           </NavLink>
         ) : (
           <>
+
+
+          <NavLink
+                  to="/ganancias"
+                  className={linkClass}
+                  onClick={() => setIsMobileOpen(false)}
+                >
+                  <span className="text-lg sm:text-base">
+                    <FaChartBar />
+                  </span>
+
+                  <span className="text-sm sm:text-base">
+                    Ganancias
+                  </span>
+                </NavLink>
+                
             <NavLink to="/asignaciones" className={linkClass} onClick={() => setIsMobileOpen(false)}>
               <span className="text-lg sm:text-base">
                 <BsCalendarCheck />

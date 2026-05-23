@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../../api/axios";
+import Swal from "sweetalert2";
 
 const PerfilHotelPage = () => {
   const [perfilId, setPerfilId] = useState(null);
@@ -26,11 +27,30 @@ const PerfilHotelPage = () => {
       }
     } catch (error) {
       console.log("Error cargando perfil:", error);
+
+      Swal.fire({
+        icon: "error",
+        title: "Error al cargar",
+        text: "No se pudo cargar el perfil del hotel.",
+        confirmButtonColor: "#334155",
+      });
     }
   };
 
   const guardarPerfil = async (e) => {
     e.preventDefault();
+
+    if (!nombre.trim()) {
+      Swal.fire({
+        icon: "warning",
+        title: "Campo requerido",
+        text: "Debe ingresar el nombre del hotel.",
+        timer: 1800,
+        showConfirmButton: false,
+        confirmButtonColor: "#334155",
+      });
+      return;
+    }
 
     try {
       setGuardando(true);
@@ -57,10 +77,25 @@ const PerfilHotelPage = () => {
       }
 
       await cargarPerfil();
-      alert("Perfil del hotel guardado correctamente");
+      setLogoNuevo(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Perfil guardado",
+        text: "El perfil del hotel se guardó correctamente.",
+        timer: 1800,
+        showConfirmButton: false,
+        confirmButtonColor: "#334155",
+      });
     } catch (error) {
       console.log("Error guardando perfil:", error.response?.data || error);
-      alert("No se pudo guardar el perfil del hotel");
+
+      Swal.fire({
+        icon: "error",
+        title: "Error al guardar",
+        text: "No se pudo guardar el perfil del hotel. Verifique los datos e intente nuevamente.",
+        confirmButtonColor: "#334155",
+      });
     } finally {
       setGuardando(false);
     }
@@ -106,11 +141,7 @@ const PerfilHotelPage = () => {
             <div className="w-28 h-28 rounded-xl border border-dashed border-slate-300 flex items-center justify-center overflow-hidden bg-slate-50">
               {logoActual || logoNuevo ? (
                 <img
-                  src={
-                    logoNuevo
-                      ? URL.createObjectURL(logoNuevo)
-                      : logoActual
-                  }
+                  src={logoNuevo ? URL.createObjectURL(logoNuevo) : logoActual}
                   alt="Logo del hotel"
                   className="w-full h-full object-cover"
                 />
