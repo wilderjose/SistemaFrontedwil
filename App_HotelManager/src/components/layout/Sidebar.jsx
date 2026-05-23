@@ -8,6 +8,7 @@ import { FaUserCheck } from "react-icons/fa6";
 import { FaHotel } from "react-icons/fa6";
 import { CiLogout } from "react-icons/ci";
 import { FaChartBar } from "react-icons/fa";
+import { MdOutlinePersonAdd } from "react-icons/md";
 
 const Sidebar = () => {
   const { logout, usuario } = useAuth();
@@ -80,7 +81,7 @@ const Sidebar = () => {
                     Ganancias
                   </span>
                 </NavLink>
-                
+
             <NavLink to="/asignaciones" className={linkClass} onClick={() => setIsMobileOpen(false)}>
               <span className="text-lg sm:text-base">
                 <BsCalendarCheck />
@@ -104,7 +105,7 @@ const Sidebar = () => {
 
             <NavLink to="/perfil-hotel" className={linkClass} onClick={() => setIsMobileOpen(false)}>
               <span className="text-lg sm:text-base">
-                <FaUserCheck />
+                <MdOutlinePersonAdd />
               </span>
               <span className="text-sm sm:text-base">Perfil del Hotel</span>
             </NavLink>
