@@ -15,7 +15,10 @@ import GraficaGanancias from "./components/dashboard/GraficaGanancias";
 
 // Redirección inicial
 const RedirectByRole = () => {
-  return <Navigate to="/ganancias" replace />;
+  const { usuario } = useAuth();
+  const esAdmin = usuario?.rol === "admin";
+
+  return <Navigate to={esAdmin ? "/usuarios" : "/ganancias"} replace />;
 };
 
 function App() {
