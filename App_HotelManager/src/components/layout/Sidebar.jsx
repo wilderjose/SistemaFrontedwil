@@ -98,14 +98,14 @@ const Sidebar = () => {
 
             <NavLink to="/clientes" className={linkClass} onClick={() => setIsMobileOpen(false)}>
               <span className="text-lg sm:text-base">
-                <FaUserCheck />
+               <MdOutlinePersonAdd />
               </span>
               <span className="text-sm sm:text-base">Clientes</span>
             </NavLink>
 
             <NavLink to="/perfil-hotel" className={linkClass} onClick={() => setIsMobileOpen(false)}>
               <span className="text-lg sm:text-base">
-                <MdOutlinePersonAdd />
+                <FaUserCheck />
               </span>
               <span className="text-sm sm:text-base">Perfil del Hotel</span>
             </NavLink>
